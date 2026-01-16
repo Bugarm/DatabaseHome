@@ -12,6 +12,8 @@ load_dotenv(dotenv_path=".env")
 app = FastAPI()
 
 # MongoDB connection
+# FastAPI gets allows the client to request data and to do that
+# it creates uploadfile folder to read and apply
 client = motor.motor_asyncio.AsyncIOMotorClient(os.getenv("MONGO_URI"))
 db = client.event_management_db
 
@@ -41,7 +43,7 @@ async def create_event(event: Event):
     event_doc = event.dict()
     result = await db.events.insert_one(event_doc)
     return {"message": "Event created", "id": str(result.inserted_id)}
-
+# This gets a list of events
 @app.get("/events")
 async def get_events():
     events = await db.events.find().to_list(100)
@@ -50,6 +52,7 @@ async def get_events():
     return events
 
 # Event poster upload
+# Creates Venues
 @app.post("/upload_event_poster/{event_id}")
 async def upload_event_poster(event_id: str, file: UploadFile = File(...)):
     content = await file.read()
@@ -69,6 +72,7 @@ async def create_venue(venue: Venue):
     result = await db.venues.insert_one(venue_doc)
     return {"message": "Venue created", "id": str(result.inserted_id)}
 
+# Gets all vanues
 @app.get("/venues")
 async def get_venues():
     venues = await db.venues.find().to_list(100)
@@ -78,12 +82,14 @@ async def get_venues():
     return venues
 
 # Attendee endpoints
+#Creates attendees
 @app.post("/attendees")
 async def create_attendee(attendee: Attendee):
     attendee_doc = attendee.dict()
     result = await db.attendees.insert_one(attendee_doc)
     return {"message": "Attendee created", "id": str(result.inserted_id)}
 
+# Gets all attendees
 @app.get("/attendees")
 async def get_attendees():
     attendees = await db.attendees.find().to_list(100)
@@ -93,12 +99,14 @@ async def get_attendees():
     return attendees
 
 # Booking endpoints
+# Creates bookings
 @app.post("/bookings")
 async def create_booking(booking: Booking):
     booking_doc = booking.dict()
     result = await db.bookings.insert_one(booking_doc)
     return {"message": "Booking created", "id": str(result.inserted_id)}
 
+#Gets all bookings
 @app.get("/bookings")
 async def get_bookings():
     bookings = await db.bookings.find().to_list(100)
@@ -108,10 +116,14 @@ async def get_bookings():
     return bookings
 
 # Upload event poster image
+# FastAPI gets allows the client to request data and to do that
+# it creates uploadfile folder to read and apply
 @app.post("/upload_event_poster/{event_id}")
 async def upload_event_poster(event_id: str, file: UploadFile = File(...)):
     content = await file.read()
     poster_doc = {
+        #This is where it stores the data, requesting data the client
+        #must fill in the exact requirements for it to process
         "event_id": event_id,
         "filename": file.filename,
         "content_type": file.content_type,
