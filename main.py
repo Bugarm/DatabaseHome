@@ -132,7 +132,7 @@ async def upload_venue_photo(venue_id: str, file: UploadFile = File(...)):
     return {"message": "Venue photo uploaded", "id": str(result.inserted_id)} #Success message with photo ID
 
 # Upload Promo Video (Video)
-@app.post("/upload_promo_videos/{event_id}") #Upload a video file as promotional video which takes the id of the event and the uploaded video file
+@app.post("/upload_promo_video/{event_id}") #Upload a video file as promotional video which takes the id of the event and the uploaded video file
 async def upload_promo_videos(event_id: str, file: UploadFile = File(...)):
     content = await file.read()  # Read the file content as bytes
     # Create document with file metadata and content
