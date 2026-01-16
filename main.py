@@ -8,10 +8,10 @@ from dotenv import load_dotenv
 import motor.motor_asyncio
 import io
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(dotenv_path=".env")
 app = FastAPI()
 # Connect to MongoDB Atlas
-client = motor.motor_asyncio.AsyncIOMotorClient("your_mongo_connection_string")
+client = motor.motor_asyncio.AsyncIOMotorClient(os.getenv("MONGO_URI"))
 db = client.event_management_db
 # Data Models
 class Event(BaseModel):
